@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: eestela <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/22 14:11:41 by eestela           #+#    #+#             */
-/*   Updated: 2019/11/24 18:20:14 by eestela          ###   ########.fr       */
+/*   Created: 2019/11/27 19:14:42 by eestela           #+#    #+#             */
+/*   Updated: 2019/12/04 15:03:37 by eestela          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,17 @@
 typedef struct			s_struc
 
 {
-	char				*content;
+	char				*cont;
 	int					fd;
 	struct s_struc		*next;
 }						t_struc;
-size_t					ft_strlen(const char *s);
+
 int						get_next_line(int fd, char **line);
+size_t					ft_strlen(const char *s);
 char					*ft_strchr(const char *s, int c);
+char					*ft_strdup(const char *s1);
+char					*ft_strjoin(char const *s1, char const *s2);
+char					*ft_substr(char const *s, unsigned int start,
+						size_t len);
+
 #endif

@@ -1,98 +1,132 @@
-/ ************************************************************************** */
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eestela <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/22 14:17:32 by eestela           #+#    #+#             */
-/*   Updated: 2019/11/24 19:11:56 by eestela          ###   ########.fr       */
+/*   Created: 2019/11/28 16:27:58 by eestela           #+#    #+#             */
+/*   Updated: 2019/12/04 15:48:24 by eestela          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static t_struc		*ft_findfill(t_struc *start, int fd)
+static t_struc		*ft_findlst(t_struc **start, int fd)
+{
+	t_struc *lst;
+
+	lst = *start;
+	if (!lst)
+	{
+		if (!(lst = (t_struc*)malloc(sizeof(t_struc))))
+			return (NULL);
+		lst->cont = ft_strdup("");
+		lst->next = *start;
+		lst->fd = fd;
+		*start = lst;
+	}
+	while (lst)
+	{
+		if (lst->fd == fd)
+			return (lst);
+		lst = lst->next;
+	}
+	if (!(lst = (t_struc*)malloc(sizeof(t_struc))))
+		return (NULL);
+	lst->cont = ft_strdup("");
+	lst->next = *start;
+	lst->fd = fd;
+	*start = lst;
+	return (lst);
+}
+
+static char	*ft_substr_gnl(char **s, unsigned int start, size_t len, int e)
+{
+	char *tmp;
+
+	if (e == 1)
+	{
+		tmp = *s;
+		*s = ft_substr(*s, start, len);
+		free(tmp);
+		return(*s);
+	}
+	else
+	{
+		tmp = ft_substr(*s, start, len);
+		return (tmp);
+	}
+}
+
+static char			*ft_strjoin_gnl(char **s1, char *s2, int r)
+{
+	char	*tmp;
+
+	s2[r] = 0;
+	tmp = *s1;
+	*s1 = ft_strjoin(*s1, s2);
+	free(tmp);
+	return (*s1);
+}
+
+int				ft_justfree(char *buf, t_struc **start, t_struc *lst, int e)
 {
 	t_struc		*tmp;
 
-	tmp = start;
-	while (tmp)
+	if ((e == 'a' && lst && lst->cont) || e != 'a')
+		free(buf);
+	if (lst && e != 'd')
 	{
-		if (tmp->fd == fd)
-			return (tmp);
-		tmp = tmp->next;
+		tmp = *start;
+		if (lst == *start)
+			*start = lst->next;
+		while (tmp->next != lst)
+		{
+			tmp = tmp->next;
+			tmp->next = lst->next;
+		}
+		if (lst->cont)
+			free(lst->cont);
+		free(lst);
 	}
-	if (!(tmp = malloc(sizeof(t_struc))))
-		return (NULL);
-	tmp->fd = fd;
-	tmp->next = start;
-	if (!(tmp->content = malloc(sizeof(char))))
-		return (NULL);
-	tmp->content = 0;
-	start = tmp;
-	return (tmp);
-}
-
-static char	*ft_strjoingnl(char const *s1, char const *s2)
-{
-	int		len;
-	int		i;
-	char	*new;
-	int		j;
-
-	if (!s1 || !s2)
-	{
-		return (NULL);
-	}
-	len = ft_strlen(s1) + ft_strlen(s2);
-	if (!(new = (char *)malloc(sizeof(char) * (len + 1))))
-		return (NULL);
-	i = 0;
-	j = 0;
-	while (s1[j])
-		new[i++] = s1[j++];
-	j = 0;
-	while (s2[j])
-		new[i++] = s2[j++];
-	new[i] = '\0';
-	free ((void*)s1);
-	return (new);
-}
-
-
-static void			*ft_toreturn(char **line, t_struc *lst)
-{
-	int	i;
-	int	j;
-
-	j = 0;
-	i = 0;
-	while (lst->content[j] != '\n' && lst->content)
-		*line[i++] = lst->content[j++];
-	line[i] = 0;
-	j = 0;
-	while (lst->content[i])
-		lst->content[j++] = lst->content[i++];
-	lst->content[j] = 0;
-}
-
-int					get_next_line(int fd, char **line)
-{
-	static t_struc	*start;
-	t_struc			*lst;
-	char			*buf;
-	int				r;
-
-	lst = ft_findfill(start, fd);
-	if(!(buf = malloc (sizeof(char) * (BUFFER_SIZE + 1)))
+	if (e == 'a' || e == 'b')
 		return (-1);
-	while (r = read(fd, buf, BUFFER_SIZE))
+	if (e == 'c')
+		return (0);
+	return (1);
+}
+
+int				get_next_line(int fd, char **line)
+{
+	static t_struc		*start;
+	t_struc				*lst;
+	char				*buf;
+	size_t				r;
+	size_t				e;
+	int		i;
+
+	i = 0;
+	lst = ft_findlst(&start, fd);
+	buf = NULL;
+	if (!lst || !lst->cont ||
+	!(buf = (char*)malloc(sizeof(char) *(BUFFER_SIZE + 1))))
+		return (ft_justfree(buf, &start, lst, 'a'));
+	while (!(ft_strchr(lst->cont, '\n')) && (r = read(fd, buf, BUFFER_SIZE)) &&
+			lst->cont)
 	{
-		buf[r] = '\0';
-		lst->content = ft_strjoingnl(lst->content, buf);
-		if (ft_strchr(lst->content, '\n'))
-			break ;
+		i++;
+		lst->cont = ft_strjoin_gnl(&lst->cont, buf, r);
+		printf("buf:%i = %s\n", i, lst->cont);
 	}
-	ft_toreturn(line, lst);
+	e = 0;
+	while (lst->cont && lst->cont[e] != '\n')
+		e++;
+	*line = ft_substr_gnl(&lst->cont, 0, e, 0);
+	lst->cont = ft_substr_gnl(&lst->cont, e + 1, ft_strlen(lst->cont), 1);
+	if (!line || !lst->cont)
+		return (ft_justfree(buf, &start, lst, 'b'));
+	if (r < BUFFER_SIZE)
+		return (ft_justfree(buf, &start, lst, 'c'));
+	return (ft_justfree(buf, &start, lst, 'd'));
 }
