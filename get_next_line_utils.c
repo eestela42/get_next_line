@@ -6,7 +6,7 @@
 /*   By: eestela <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/26 20:16:13 by eestela           #+#    #+#             */
-/*   Updated: 2019/12/04 15:02:58 by eestela          ###   ########.fr       */
+/*   Updated: 2020/02/01 17:14:45 by eestela          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,9 +84,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	int		j;
 
 	if (!s1 || !s2)
-	{
 		return (NULL);
-	}
 	len = ft_strlen(s1) + ft_strlen(s2);
 	if (!(new = (char *)malloc(sizeof(char) * (len + 1))))
 		return (NULL);

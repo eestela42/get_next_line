@@ -6,7 +6,7 @@
 /*   By: eestela <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/26 20:28:07 by eestela           #+#    #+#             */
-/*   Updated: 2019/12/04 15:35:58 by eestela          ###   ########.fr       */
+/*   Updated: 2020/02/05 11:05:57 by eestela          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 
 int		main(int ac, char **av)
 {
+	int i;
 	(void)ac;
 	int		x;
 	int		y;
@@ -32,30 +33,34 @@ int		main(int ac, char **av)
 	fd0 = open(av[1], O_RDONLY);
 	fd1 = open(av[2], O_RDONLY);
 	fd2 = open(av[3], O_RDONLY);
+	i = 0;
 	while (x > 0 || y > 0 || z > 0)
 	{
+		i++;
 		printf ("\nligne: %i\n", l);
 		if (x > 0)
 		{
 			x = get_next_line(fd0, &line);
-			printf("text1: %s\n", line);
+			if (x > 0)
+				printf("text1: %s", line);
 			free(line);
-		}/*
+		}
 		if (y > 0)
 		{
 			y = get_next_line(fd1, &line);
-			printf("text2: %s\n", line);
+			if (y > 0)
+				printf("text2: %s", line);
 			free(line);
 		}
 		if (z > 0)
 		{
 			z = get_next_line(fd2, &line);
-			printf("text3: %s\n", line);
+			if (z > 0)
+				printf("text3: %s", line);
 			free(line);
-		}*/
+		}
 		l++;
 	}
-	//while (1);
 	return (0);
 }
 /*
