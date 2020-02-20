@@ -6,15 +6,12 @@
 /*   By: eestela <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/27 19:14:42 by eestela           #+#    #+#             */
-/*   Updated: 2020/02/05 14:49:03 by eestela          ###   ########.fr       */
+/*   Updated: 2020/02/20 18:03:04 by eestela          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
-#ifndef BUFFER_SIZE
-# define BUFFER_SIZE 1
-#endif
 # include <string.h>
 # include <stdlib.h>
 # include <unistd.h>

@@ -6,7 +6,7 @@
 /*   By: eestela <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/23 19:34:32 by eestela           #+#    #+#             */
-/*   Updated: 2020/02/07 11:15:31 by eestela          ###   ########.fr       */
+/*   Updated: 2020/02/20 18:17:52 by eestela          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int				ft_findlink(int fd, t_struc **start, t_struc **link)
 	tmp = *start;
 	while (tmp)
 	{
-		if (tmp->fd == fd &&  (*link = tmp))
+		if (tmp->fd == fd && (*link = tmp))
 			return (1);
 		tmp = tmp->next;
 	}
@@ -37,12 +37,11 @@ int				ft_findlink(int fd, t_struc **start, t_struc **link)
 	return (1);
 }
 
-
-int		ft_place(t_struc *link, char **line, int check)
+int				ft_place(t_struc *link, char **line, int check)
 {
 	int			r;
 	char		*tmp;
-	
+
 	r = 0;
 	while (link->cont[r] != '\n' && link->cont[r])
 		r++;
@@ -52,7 +51,7 @@ int		ft_place(t_struc *link, char **line, int check)
 		free(tmp);
 		return (-1);
 	}
-	free (tmp);
+	free(tmp);
 	tmp = link->cont;
 	if (!(link->cont = ft_substr(link->cont, r + 1, ft_strlen(link->cont))))
 	{
@@ -63,7 +62,7 @@ int		ft_place(t_struc *link, char **line, int check)
 	return (check);
 }
 
-int			ft_gnl_read(int fd, char **line, t_struc *link)
+int				ft_gnl_read(int fd, char **line, t_struc *link)
 {
 	char				*buf;
 	int					r;
@@ -85,10 +84,10 @@ int			ft_gnl_read(int fd, char **line, t_struc *link)
 	free(buf);
 	if (r < 0)
 		return (r);
-	return(ft_place(link, line, r));
+	return (ft_place(link, line, r));
 }
 
-int			ft_free_gnl(int fd, t_struc **start, int r)
+int				ft_free_gnl(int fd, t_struc **start, int r)
 {
 	t_struc		*link;
 	t_struc		*tmp;
@@ -113,12 +112,10 @@ int			ft_free_gnl(int fd, t_struc **start, int r)
 	}
 	if (r < 0)
 		return (-1);
-	if (r > 0)
-		return (1);
 	return (0);
 }
 
-int			get_next_line(int fd, char **line)
+int				get_next_line(int fd, char **line)
 {
 	static t_struc		*start;
 	t_struc				*link;
